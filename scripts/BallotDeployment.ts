@@ -16,6 +16,11 @@ function convertStringArrayToBytes32(array: string[]) {
 async function main() {
   const PROPOSALS = ["Proposal 1", "Proposal 2", "Proposal 3"];
 
+  const skyyAddress = "0xd60e2f289ff4e54eac21e30c2bdd78c47aa466e7";
+  const loungAddress = "0x9620daf4fE148e8dCB58745f35BE24AE30503535";
+  const napoAddress = "0xc5CFd52B5813f677CCC0FB309fDbAE289bF6Ef30";
+  const billAddress = "0x4fFe51634A07d614D4f198CC87D4FfE88DAf420e";
+
   const tokenFactory = await ethers.getContractFactory("MyVotingToken");
   const tokenContract = (await tokenFactory.deploy()) as MyVotingToken;
   await tokenContract.deployed();
@@ -43,6 +48,22 @@ async function main() {
     gasLimit: 1000000,
   });
 
+  await tokenContract.mint(napoAddress, ethers.utils.parseUnits("3000", 18), {
+    gasLimit: 1000000,
+  });
+
+  await tokenContract.mint(skyyAddress, ethers.utils.parseUnits("3000", 18), {
+    gasLimit: 1000000,
+  });
+
+  await tokenContract.mint(loungAddress, ethers.utils.parseUnits("3000", 18), {
+    gasLimit: 1000000,
+  });
+
+  await tokenContract.mint(billAddress, ethers.utils.parseUnits("3000", 18), {
+    gasLimit: 1000000,
+  });
+
   //delegate transaction
   const delegateTx = await tokenContract
     .connect(deployer)
@@ -53,7 +74,7 @@ async function main() {
   //vote transaction
   const voteTx = await tokenizedBallot
     .connect(acc1)
-    .vote(0, ethers.utils.parseUnits("1000", 0), {
+    .vote(0, ethers.utils.parseUnits("1000", 18), {
       gasLimit: 1000000,
     });
   console.log(
@@ -63,7 +84,7 @@ async function main() {
 
   await tokenContract.mint(
     deployer.address,
-    ethers.utils.parseUnits("20000000000000", 18),
+    ethers.utils.parseUnits("2000", 18),
     {
       gasLimit: 10000000,
       gasPrice: ethers.utils.parseUnits("1", "gwei"),
